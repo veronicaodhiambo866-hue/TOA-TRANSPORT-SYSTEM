@@ -1,0 +1,1721 @@
+
+< html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TOA Staff Transport Management System</title>
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: Arial, sans-serif;
+        }
+
+        body {
+            background: #f4f6f8;
+            color: #333;
+        }
+
+        
+        .sidebar {
+            position: fixed;
+            left: 0;
+            top: 0;
+            width: 250px;
+            height: 100vh;
+            background: #0b5d3b;
+            color: white;
+            overflow-y: auto;
+        }
+
+        .logo {
+            padding: 25px 20px;
+            text-align: center;
+            border-bottom: 1px solid rgba(255,255,255,0.2);
+        }
+
+            .logo h2 {
+                font-size: 20px;
+            }
+
+            .logo p {
+                font-size: 12px;
+                margin-top: 5px;
+            }
+
+        .menu {
+            padding: 15px 0;
+        }
+
+        .menu-title {
+            padding: 10px 20px;
+            font-size: 11px;
+            color: #b9d9ca;
+            text-transform: uppercase;
+        }
+
+        .menu a {
+            display: block;
+            padding: 13px 20px;
+            color: white;
+            text-decoration: none;
+            font-size: 14px;
+            cursor: pointer;
+        }
+
+            .menu a:hover,
+            .menu a.active {
+                background: #08482e;
+            }
+
+            .menu a span {
+                margin-right: 10px;
+            }
+
+       
+        .main {
+            margin-left: 250px;
+            min-height: 100vh;
+        }
+
+        
+        .topbar {
+            height: 70px;
+            background: white;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 30px;
+            border-bottom: 1px solid #ddd;
+        }
+
+            .topbar h2 {
+                color: #0b5d3b;
+            }
+
+        .user {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .avatar {
+            width: 40px;
+            height: 40px;
+            background: #0b5d3b;
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+        }
+
+        
+        .content {
+            padding: 30px;
+        }
+
+        .page {
+            display: none;
+        }
+
+            .page.active {
+                display: block;
+            }
+
+        .page-title {
+            margin-bottom: 25px;
+        }
+
+            .page-title h1 {
+                font-size: 25px;
+                color: #222;
+            }
+
+            .page-title p {
+                color: #777;
+                margin-top: 5px;
+            }
+
+        
+        .cards {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 18px;
+            margin-bottom: 25px;
+        }
+
+        .card {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+        }
+
+        .stat-card {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .stat-info h3 {
+            color: #777;
+            font-size: 13px;
+            font-weight: normal;
+        }
+
+        .stat-info h2 {
+            font-size: 28px;
+            margin-top: 8px;
+        }
+
+        .stat-icon {
+            width: 48px;
+            height: 48px;
+            background: #e6f4ed;
+            color: #0b5d3b;
+            border-radius: 10px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 22px;
+        }
+
+        
+        .table-card {
+            background: white;
+            border-radius: 10px;
+            padding: 20px;
+            margin-bottom: 25px;
+            overflow-x: auto;
+        }
+
+        .table-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 18px;
+        }
+
+            .table-header h3 {
+                color: #333;
+            }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        th {
+            background: #f3f6f4;
+            text-align: left;
+            padding: 13px;
+            font-size: 13px;
+            color: #555;
+        }
+
+        td {
+            padding: 13px;
+            border-bottom: 1px solid #eee;
+            font-size: 13px;
+        }
+
+        
+        .status {
+            padding: 5px 10px;
+            border-radius: 15px;
+            font-size: 11px;
+            display: inline-block;
+        }
+
+        .available {
+            background: #e4f6ea;
+            color: #16713e;
+        }
+
+        .assigned {
+            background: #e5efff;
+            color: #2361a8;
+        }
+
+        .standby {
+            background: #fff2d9;
+            color: #9a6500;
+        }
+
+        .pending {
+            background: #fff2d9;
+            color: #9a6500;
+        }
+
+        .approved {
+            background: #e4f6ea;
+            color: #16713e;
+        }
+
+        .ontrip {
+            background: #e5efff;
+            color: #2361a8;
+        }
+
+        
+        .btn {
+            border: none;
+            padding: 9px 15px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 13px;
+        }
+
+        .btn-primary {
+            background: #0b5d3b;
+            color: white;
+        }
+
+        .btn-secondary {
+            background: #e8eeee;
+            color: #333;
+        }
+
+        .btn-danger {
+            background: #f8dddd;
+            color: #a52828;
+        }
+
+        .quick-actions {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 15px;
+        }
+
+        .quick-action {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            cursor: pointer;
+            border: 1px solid #eee;
+        }
+
+            .quick-action:hover {
+                border-color: #0b5d3b;
+            }
+
+        .quick-action-icon {
+            font-size: 25px;
+            margin-bottom: 10px;
+        }
+
+        .quick-action h4 {
+            margin-bottom: 5px;
+        }
+
+        .quick-action p {
+            font-size: 12px;
+            color: #777;
+        }
+
+       
+        .form-card {
+            background: white;
+            padding: 25px;
+            border-radius: 10px;
+            max-width: 800px;
+        }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+
+        .form-group {
+            margin-bottom: 18px;
+        }
+
+            .form-group label {
+                display: block;
+                margin-bottom: 7px;
+                font-size: 13px;
+                font-weight: bold;
+            }
+
+            .form-group input,
+            .form-group select,
+            .form-group textarea {
+                width: 100%;
+                padding: 11px;
+                border: 1px solid #ddd;
+                border-radius: 6px;
+                outline: none;
+            }
+
+            .form-group textarea {
+                height: 100px;
+                resize: vertical;
+            }
+
+        .alert {
+            padding: 15px;
+            background: #fff5dc;
+            border-left: 4px solid #e0a100;
+            border-radius: 5px;
+            margin-bottom: 20px;
+        }
+
+        
+        @media(max-width: 1000px) {
+            .cards {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .quick-actions {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        @media(max-width: 700px) {
+            .sidebar {
+                width: 70px;
+            }
+
+            .logo h2,
+            .logo p,
+            .menu-title,
+            .menu a span.text {
+                display: none;
+            }
+
+            .menu a {
+                text-align: center;
+                font-size: 20px;
+            }
+
+            .main {
+                margin-left: 70px;
+            }
+
+            .cards {
+                grid-template-columns: 1fr;
+            }
+
+            .quick-actions {
+                grid-template-columns: 1fr;
+            }
+
+            .form-row {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+   
+
+    <div class="sidebar">
+
+        <div class="logo">
+            <h2>TOA TRANSPORT</h2>
+            <p>Management System</p>
+        </div>
+
+        <div class="menu">
+
+            <div class="menu-title">Main</div>
+
+            <a class="active" onclick="showPage('dashboard', this)">
+                <span>📊</span>
+                <span class="text">Dashboard</span>
+            </a>
+
+            <div class="menu-title">Transport</div>
+
+            <a onclick="showPage('staff', this)">
+                <span>👥</span>
+                <span class="text">Staff</span>
+            </a>
+
+            <a onclick="showPage('vehicles', this)">
+                <span>🚐</span>
+                <span class="text">Vehicles</span>
+            </a>
+
+            <a onclick="showPage('drivers', this)">
+                <span>👨‍✈️</span>
+                <span class="text">Drivers</span>
+            </a>
+
+            <a onclick="showPage('routes', this)">
+                <span>🛣️</span>
+                <span class="text">Routes</span>
+            </a>
+
+            <a onclick="showPage('schedules', this)">
+                <span>📅</span>
+                <span class="text">Schedules</span>
+            </a>
+
+            <a onclick="showPage('boarding', this)">
+                <span>✅</span>
+                <span class="text">Boarding</span>
+            </a>
+
+            <div class="menu-title">Requests</div>
+
+            <a onclick="showPage('requests', this)">
+                <span>🆘</span>
+                <span class="text">Special Requests</span>
+            </a>
+
+            <a onclick="showPage('swaps', this)">
+                <span>🔄</span>
+                <span class="text">Driver Swaps</span>
+            </a>
+
+            <a onclick="showPage('lateness', this)">
+                <span>⏰</span>
+                <span class="text">Staff Lateness</span>
+            </a>
+
+            <div class="menu-title">Project Manager</div>
+
+            <a onclick="showPage('pm', this)">
+                <span>👔</span>
+                <span class="text">PM Transport</span>
+            </a>
+
+            <a onclick="showPage('meals', this)">
+                <span>🍱</span>
+                <span class="text">PM Meals</span>
+            </a>
+
+            <div class="menu-title">Reports</div>
+
+            <a onclick="showPage('reports', this)">
+                <span>📈</span>
+                <span class="text">Reports</span>
+            </a>
+
+            <a onclick="showPage('notifications', this)">
+                <span>🔔</span>
+                <span class="text">Notifications</span>
+            </a>
+
+        </div>
+
+    </div>
+
+
+  
+
+    <div class="main">
+
+        <div class="topbar">
+
+            <h2>Transport Administration</h2>
+
+            <div class="user">
+
+                <div>
+                    <strong>TOA Administrator</strong><br>
+                    <small>Transport Admin</small>
+                </div>
+
+                <div class="avatar">
+                    TA
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <div class="content">
+
+
+           
+            <section id="dashboard" class="page active">
+
+                <div class="page-title">
+                    <h1>Dashboard</h1>
+                    <p>Overview of today's transport operations.</p>
+                </div>
+
+
+                <div class="cards">
+
+                    <div class="card stat-card">
+                        <div class="stat-info">
+                            <h3>Total Vehicles</h3>
+                            <h2>18</h2>
+                        </div>
+                        <div class="stat-icon">🚐</div>
+                    </div>
+
+                    <div class="card stat-card">
+                        <div class="stat-info">
+                            <h3>Available Vehicles</h3>
+                            <h2>11</h2>
+                        </div>
+                        <div class="stat-icon">✓</div>
+                    </div>
+
+                    <div class="card stat-card">
+                        <div class="stat-info">
+                            <h3>Drivers on Duty</h3>
+                            <h2>14</h2>
+                        </div>
+                        <div class="stat-icon">👨‍✈️</div>
+                    </div>
+
+                    <div class="card stat-card">
+                        <div class="stat-info">
+                            <h3>Today's Trips</h3>
+                            <h2>16</h2>
+                        </div>
+                        <div class="stat-icon">🚌</div>
+                    </div>
+
+                </div>
+
+
+                <div class="cards">
+
+                    <div class="card stat-card">
+                        <div class="stat-info">
+                            <h3>Pending Requests</h3>
+                            <h2>3</h2>
+                        </div>
+                        <div class="stat-icon">🆘</div>
+                    </div>
+
+                    <div class="card stat-card">
+                        <div class="stat-info">
+                            <h3>Vehicles on Standby</h3>
+                            <h2>2</h2>
+                        </div>
+                        <div class="stat-icon">⏸</div>
+                    </div>
+
+                    <div class="card stat-card">
+                        <div class="stat-info">
+                            <h3>Staff Late</h3>
+                            <h2>5</h2>
+                        </div>
+                        <div class="stat-icon">⏰</div>
+                    </div>
+
+                    <div class="card stat-card">
+                        <div class="stat-info">
+                            <h3>Departures</h3>
+                            <h2>9</h2>
+                        </div>
+                        <div class="stat-icon">🚦</div>
+                    </div>
+
+                </div>
+
+
+                <div class="table-card">
+
+                    <div class="table-header">
+
+                        <h3>Today's Transport Schedule</h3>
+
+                        <button class="btn btn-primary"
+                                onclick="showPage('schedules')">
+                            View All
+                        </button>
+
+                    </div>
+
+                    <table>
+
+                        <tr>
+                            <th>Time</th>
+                            <th>Route</th>
+                            <th>Vehicle</th>
+                            <th>Driver</th>
+                            <th>Passengers</th>
+                            <th>Status</th>
+                        </tr>
+
+                        <tr>
+                            <td>06:00 AM</td>
+                            <td>Nyali Route</td>
+                            <td>KDL 837M</td>
+                            <td>John Mwangi</td>
+                            <td>12</td>
+                            <td><span class="status ontrip">On Trip</span></td>
+                        </tr>
+
+                        <tr>
+                            <td>06:15 AM</td>
+                            <td>Bamburi Route</td>
+                            <td>KDA 456P</td>
+                            <td>Peter Otieno</td>
+                            <td>14</td>
+                            <td><span class="status assigned">Assigned</span></td>
+                        </tr>
+
+                        <tr>
+                            <td>06:30 AM</td>
+                            <td>Mtwapa Route</td>
+                            <td>KDB 789R</td>
+                            <td>David Kamau</td>
+                            <td>10</td>
+                            <td><span class="status available">Scheduled</span></td>
+                        </tr>
+
+                    </table>
+
+                </div>
+
+
+                <div class="alert">
+
+                    <strong> Transport Alerts</strong>
+
+                    <p>
+                        3 special transport requests are waiting
+                        for Transport Administration approval.
+                    </p>
+
+                </div>
+
+
+                <h3 style="margin-bottom:15px;">Quick Actions</h3>
+
+                <div class="quick-actions">
+
+                    <div class="quick-action"
+                         onclick="showPage('schedules')">
+
+                        <div class="quick-action-icon">📅</div>
+
+                        <h4>Create Schedule</h4>
+
+                        <p>Create a new transport schedule.</p>
+
+                    </div>
+
+
+                    <div class="quick-action"
+                         onclick="showPage('requests')">
+
+                        <div class="quick-action-icon">🆘</div>
+
+                        <h4>Special Request</h4>
+
+                        <p>Review emergency transport requests.</p>
+
+                    </div>
+
+
+                    <div class="quick-action"
+                         onclick="showPage('swaps')">
+
+                        <div class="quick-action-icon">🔄</div>
+
+                        <h4>Driver Swap</h4>
+
+                        <p>Manage driver replacements.</p>
+
+                    </div>
+
+
+                    <div class="quick-action"
+                         onclick="showPage('pm')">
+
+                        <div class="quick-action-icon">👔</div>
+
+                        <h4>PM Transport</h4>
+
+                        <p>Manage Project Manager transportation.</p>
+
+                    </div>
+
+                </div>
+
+            </section>
+
+            <section id="staff" class="page">
+
+                <div class="page-title">
+                    <h1>Staff Management</h1>
+                    <p>Manage employee transport profiles.</p>
+                </div>
+
+                <div class="table-card">
+
+                    <div class="table-header">
+
+                        <h3>Staff Members</h3>
+
+                        <button class="btn btn-primary">
+                            + Add Staff
+                        </button>
+
+                    </div>
+
+                    <table>
+
+                        <tr>
+                            <th>Employee No.</th>
+                            <th>Name</th>
+                            <th>Home Location</th>
+                            <th>Pickup Point</th>
+                            <th>Route</th>
+                            <th>Status</th>
+                        </tr>
+
+                        <tr>
+                            <td>TOA001</td>
+                            <td>Veronica Odhiambo</td>
+                            <td>Nyali</td>
+                            <td>Nyali Centre</td>
+                            <td>Nyali Route</td>
+                            <td><span class="status available">Active</span></td>
+                        </tr>
+
+                        <tr>
+                            <td>TOA002</td>
+                            <td>James Otieno</td>
+                            <td>Bamburi</td>
+                            <td>Bamburi Mwisho</td>
+                            <td>Bamburi Route</td>
+                            <td><span class="status available">Active</span></td>
+                        </tr>
+
+                    </table>
+
+                </div>
+
+            </section>
+
+            <section id="vehicles" class="page">
+
+                <div class="page-title">
+
+                    <h1>Vehicle Management</h1>
+
+                    <p>Manage TOA's 18-vehicle fleet.</p>
+
+                </div>
+
+                <div class="table-card">
+
+                    <div class="table-header">
+
+                        <h3>Fleet</h3>
+
+                        <button class="btn btn-primary">
+                            + Add Vehicle
+                        </button>
+
+                    </div>
+
+                    <table>
+
+                        <tr>
+                            <th>Registration</th>
+                            <th>Type</th>
+                            <th>Capacity</th>
+                            <th>Status</th>
+                            <th>Assignment</th>
+                        </tr>
+
+                        <tr>
+                            <td>KDL 837M</td>
+                            <td>Staff Bus</td>
+                            <td>14</td>
+                            <td><span class="status ontrip">On Trip</span></td>
+                            <td>Nyali Route</td>
+                        </tr>
+
+                        <tr>
+                            <td>KDA 456P</td>
+                            <td>Staff Bus</td>
+                            <td>14</td>
+                            <td><span class="status assigned">Assigned</span></td>
+                            <td>Bamburi Route</td>
+                        </tr>
+
+                        <tr>
+                            <td>KDB 789R</td>
+                            <td>Van</td>
+                            <td>8</td>
+                            <td><span class="status standby">PM Standby</span></td>
+                            <td>Project Manager</td>
+                        </tr>
+
+                        <tr>
+                            <td>KDC 345T</td>
+                            <td>Special Vehicle</td>
+                            <td>4</td>
+                            <td><span class="status available">Available</span></td>
+                            <td>Non-Shareable</td>
+                        </tr>
+
+                    </table>
+
+                </div>
+
+            </section>
+
+
+           
+            <section id="drivers" class="page">
+
+                <div class="page-title">
+
+                    <h1>Driver Management</h1>
+
+                    <p>Manage drivers and assignments.</p>
+
+                </div>
+
+                <div class="table-card">
+
+                    <div class="table-header">
+
+                        <h3>Drivers</h3>
+
+                        <button class="btn btn-primary">
+                            + Add Driver
+                        </button>
+
+                    </div>
+
+                    <table>
+
+                        <tr>
+                            <th>Driver</th>
+                            <th>Phone</th>
+                            <th>Vehicle</th>
+                            <th>Route</th>
+                            <th>Status</th>
+                        </tr>
+
+                        <tr>
+                            <td>John Mwangi</td>
+                            <td>0711 000 001</td>
+                            <td>KDL 837M</td>
+                            <td>Nyali Route</td>
+                            <td><span class="status ontrip">On Duty</span></td>
+                        </tr>
+
+                        <tr>
+                            <td>Peter Otieno</td>
+                            <td>0711 000 002</td>
+                            <td>KDA 456P</td>
+                            <td>Bamburi Route</td>
+                            <td><span class="status available">Available</span></td>
+                        </tr>
+
+                    </table>
+
+                </div>
+
+            </section>
+
+
+          
+
+            <section id="routes" class="page">
+
+                <div class="page-title">
+
+                    <h1>Routes & Pickup Points</h1>
+
+                    <p>Manage transport routes and pickup locations.</p>
+
+                </div>
+
+                <div class="table-card">
+
+                    <button class="btn btn-primary">
+                        + Add Route
+                    </button>
+
+                    <br><br>
+
+                    <table>
+
+                        <tr>
+                            <th>Route</th>
+                            <th>Origin</th>
+                            <th>Pickup Points</th>
+                            <th>Destination</th>
+                        </tr>
+
+                        <tr>
+                            <td>Nyali Route</td>
+                            <td>Nyali</td>
+                            <td>Nyali Centre, Links Road</td>
+                            <td>TOA Site</td>
+                        </tr>
+
+                        <tr>
+                            <td>Bamburi Route</td>
+                            <td>Bamburi</td>
+                            <td>Bamburi Mwisho, Mtambo</td>
+                            <td>TOA Site</td>
+                        </tr>
+
+                        <tr>
+                            <td>Mtwapa Route</td>
+                            <td>Mtwapa</td>
+                            <td>Mtwapa Stage, Shanzu</td>
+                            <td>TOA Site</td>
+                        </tr>
+
+                    </table>
+
+                </div>
+
+            </section>
+
+
+          
+
+            <section id="schedules" class="page">
+
+                <div class="page-title">
+
+                    <h1>Transport Scheduling</h1>
+
+                    <p>Create and manage daily transportation.</p>
+
+                </div>
+
+                <div class="form-card">
+
+                    <h3>Create Transport Schedule</h3>
+
+                    <br>
+
+                    <div class="form-row">
+
+                        <div class="form-group">
+
+                            <label>Date</label>
+
+                            <input type="date">
+
+                        </div>
+
+                        <div class="form-group">
+
+                            <label>Departure Time</label>
+
+                            <input type="time">
+
+                        </div>
+
+                    </div>
+
+
+                    <div class="form-row">
+
+                        <div class="form-group">
+
+                            <label>Trip Type</label>
+
+                            <select>
+
+                                <option>Morning</option>
+                                <option>Evening</option>
+                                <option>Special Trip</option>
+                                <option>Emergency Trip</option>
+                                <option>PM Transport</option>
+                                <option>Standby</option>
+                                <option>Meal Collection</option>
+                                <option>Security / Police</option>
+
+                            </select>
+
+                        </div>
+
+
+                        <div class="form-group">
+
+                            <label>Route</label>
+
+                            <select>
+
+                                <option>Nyali Route</option>
+                                <option>Bamburi Route</option>
+                                <option>Mtwapa Route</option>
+
+                            </select>
+
+                        </div>
+
+                    </div>
+
+
+                    <div class="form-row">
+
+                        <div class="form-group">
+
+                            <label>Vehicle</label>
+
+                            <select>
+
+                                <option>KDL 837M</option>
+                                <option>KDA 456P</option>
+                                <option>KDB 789R</option>
+
+                            </select>
+
+                        </div>
+
+
+                        <div class="form-group">
+
+                            <label>Driver</label>
+
+                            <select>
+
+                                <option>John Mwangi</option>
+                                <option>Peter Otieno</option>
+                                <option>David Kamau</option>
+
+                            </select>
+
+                        </div>
+
+                    </div>
+
+
+                    <div class="form-group">
+
+                        <label>Destination</label>
+
+                        <input type="text"
+                               placeholder="Enter destination">
+
+                    </div>
+
+
+                    <button class="btn btn-primary">
+                        Create Schedule
+                    </button>
+
+                </div>
+
+            </section>
+
+
+           
+
+            <section id="boarding" class="page">
+
+                <div class="page-title">
+
+                    <h1>Boarding Management</h1>
+
+                    <p>Confirm staff boarding and transport attendance.</p>
+
+                </div>
+
+                <div class="table-card">
+
+                    <table>
+
+                        <tr>
+                            <th>Employee</th>
+                            <th>Pickup Point</th>
+                            <th>Vehicle</th>
+                            <th>Expected Time</th>
+                            <th>Status</th>
+                        </tr>
+
+                        <tr>
+                            <td>Veronica Odhiambo</td>
+                            <td>Nyali Centre</td>
+                            <td>KDL 837M</td>
+                            <td>06:00 AM</td>
+                            <td><span class="status approved">Boarded</span></td>
+                        </tr>
+
+                        <tr>
+                            <td>James Otieno</td>
+                            <td>Bamburi Mwisho</td>
+                            <td>KDA 456P</td>
+                            <td>06:15 AM</td>
+                            <td><span class="status pending">Scheduled</span></td>
+                        </tr>
+
+                    </table>
+
+                </div>
+
+            </section>
+
+
+            
+
+            <section id="requests" class="page">
+
+                <div class="page-title">
+
+                    <h1>Special Transport Requests</h1>
+
+                    <p>Review emergency, sickness and special transport requests.</p>
+
+                </div>
+
+                <div class="table-card">
+
+                    <table>
+
+                        <tr>
+                            <th>Requester</th>
+                            <th>Type</th>
+                            <th>Destination</th>
+                            <th>Reason</th>
+                            <th>Status</th>
+                            <th>Action</th>
+                        </tr>
+
+                        <tr>
+                            <td>Jane Wanjiku</td>
+                            <td>Sickness</td>
+                            <td>Mombasa Hospital</td>
+                            <td>Medical attention</td>
+
+                            <td>
+                                <span class="status pending">
+                                    Pending
+                                </span>
+                            </td>
+
+                            <td>
+
+                                <button class="btn btn-primary">
+                                    Approve
+                                </button>
+
+                                <button class="btn btn-danger">
+                                    Reject
+                                </button>
+
+                            </td>
+
+                        </tr>
+
+
+                        <tr>
+
+                            <td>Michael Otieno</td>
+
+                            <td>Emergency</td>
+
+                            <td>Nyali</td>
+
+                            <td>Family emergency</td>
+
+                            <td>
+                                <span class="status approved">
+                                    Approved
+                                </span>
+                            </td>
+
+                            <td>Assigned</td>
+
+                        </tr>
+
+                    </table>
+
+                </div>
+
+            </section>
+
+
+            
+            <section id="swaps" class="page">
+
+                <div class="page-title">
+
+                    <h1>Driver Swaps</h1>
+
+                    <p>Record and manage driver replacements.</p>
+
+                </div>
+
+                <div class="form-card">
+
+                    <h3>Record Driver Swap</h3>
+
+                    <br>
+
+                    <div class="form-group">
+
+                        <label>Original Driver</label>
+
+                        <select>
+
+                            <option>John Mwangi</option>
+                            <option>Peter Otieno</option>
+
+                        </select>
+
+                    </div>
+
+
+                    <div class="form-group">
+
+                        <label>Replacement Driver</label>
+
+                        <select>
+
+                            <option>David Kamau</option>
+                            <option>Peter Otieno</option>
+
+                        </select>
+
+                    </div>
+
+
+                    <div class="form-group">
+
+                        <label>Reason</label>
+
+                        <textarea placeholder="Enter reason for driver swap">
+                    </textarea>
+
+                    </div>
+
+
+                    <button class="btn btn-primary">
+                        Record Swap
+                    </button>
+
+                </div>
+
+            </section>
+
+
+            
+            <section id="lateness" class="page">
+
+                <div class="page-title">
+
+                    <h1>Staff Lateness</h1>
+
+                    <p>Monitor employee lateness and transport delays.</p>
+
+                </div>
+
+                <div class="table-card">
+
+                    <table>
+
+                        <tr>
+
+                            <th>Employee</th>
+                            <th>Date</th>
+                            <th>Expected</th>
+                            <th>Actual</th>
+                            <th>Minutes Late</th>
+                            <th>Reason</th>
+
+                        </tr>
+
+                        <tr>
+
+                            <td>James Otieno</td>
+
+                            <td>18/08/2026</td>
+
+                            <td>06:15</td>
+
+                            <td>06:27</td>
+
+                            <td>12</td>
+
+                            <td>Traffic</td>
+
+                        </tr>
+
+                    </table>
+
+                </div>
+
+            </section>
+
+
+          
+
+            <section id="pm" class="page">
+
+                <div class="page-title">
+
+                    <h1>Project Manager Transport</h1>
+
+                    <p>Manage PM transport, standby vehicles and special movements.</p>
+
+                </div>
+
+
+                <div class="cards">
+
+                    <div class="card">
+
+                        <h3>PM Vehicle</h3>
+
+                        <h2>KDB 789R</h2>
+
+                        <span class="status standby">
+                            Standby
+                        </span>
+
+                    </div>
+
+
+                    <div class="card">
+
+                        <h3>Driver</h3>
+
+                        <h2>David Kamau</h2>
+
+                        <span class="status available">
+                            Available
+                        </span>
+
+                    </div>
+
+
+                    <div class="card">
+
+                        <h3>Today's Movement</h3>
+
+                        <h2>10:00 AM</h2>
+
+                        <span class="status assigned">
+                            Scheduled
+                        </span>
+
+                    </div>
+
+                </div>
+
+
+                <div class="table-card">
+
+                    <h3>PM Transport Schedule</h3>
+
+                    <br>
+
+                    <table>
+
+                        <tr>
+
+                            <th>Time</th>
+                            <th>Vehicle</th>
+                            <th>Driver</th>
+                            <th>Destination</th>
+                            <th>Status</th>
+
+                        </tr>
+
+                        <tr>
+
+                            <td>10:00 AM</td>
+
+                            <td>KDB 789R</td>
+
+                            <td>David Kamau</td>
+
+                            <td>Mombasa CBD</td>
+
+                            <td>
+                                <span class="status standby">
+                                    Standby
+                                </span>
+                            </td>
+
+                        </tr>
+
+                    </table>
+
+                </div>
+
+            </section>
+
+
+         
+
+            <section id="meals" class="page">
+
+                <div class="page-title">
+
+                    <h1>PM Meal Management</h1>
+
+                    <p>Manage Project Manager meal collection and delivery.</p>
+
+                </div>
+
+                <div class="form-card">
+
+                    <h3>Meal Arrangement</h3>
+
+                    <br>
+
+                    <div class="form-row">
+
+                        <div class="form-group">
+
+                            <label>Date</label>
+
+                            <input type="date">
+
+                        </div>
+
+                        <div class="form-group">
+
+                            <label>Quantity</label>
+
+                            <input type="number">
+
+                        </div>
+
+                    </div>
+
+
+                    <div class="form-group">
+
+                        <label>Driver</label>
+
+                        <select>
+
+                            <option>David Kamau</option>
+
+                            <option>John Mwangi</option>
+
+                        </select>
+
+                    </div>
+
+
+                    <div class="form-group">
+
+                        <label>Delivery Location</label>
+
+                        <input type="text">
+
+                    </div>
+
+
+                    <button class="btn btn-primary">
+                        Save Meal Arrangement
+                    </button>
+
+                </div>
+
+            </section>
+
+
+          
+
+            <section id="reports" class="page">
+
+                <div class="page-title">
+
+                    <h1>Transport Reports</h1>
+
+                    <p>Operational reports and transport statistics.</p>
+
+                </div>
+
+
+                <div class="cards">
+
+                    <div class="card">
+
+                        <h3>Daily Transport</h3>
+
+                        <p>View daily vehicle and driver movements.</p>
+
+                        <br>
+
+                        <button class="btn btn-primary">
+                            Generate
+                        </button>
+
+                    </div>
+
+
+                    <div class="card">
+
+                        <h3>Vehicle Utilisation</h3>
+
+                        <p>Monitor fleet usage and standby time.</p>
+
+                        <br>
+
+                        <button class="btn btn-primary">
+                            Generate
+                        </button>
+
+                    </div>
+
+
+                    <div class="card">
+
+                        <h3>Driver Report</h3>
+
+                        <p>Trips, swaps and driver activities.</p>
+
+                        <br>
+
+                        <button class="btn btn-primary">
+                            Generate
+                        </button>
+
+                    </div>
+
+
+                    <div class="card">
+
+                        <h3>Lateness Report</h3>
+
+                        <p>Monitor staff lateness patterns.</p>
+
+                        <br>
+
+                        <button class="btn btn-primary">
+                            Generate
+                        </button>
+
+                    </div>
+
+                </div>
+
+            </section>
+
+
+          
+
+            <section id="notifications" class="page">
+
+                <div class="page-title">
+
+                    <h1>Notifications</h1>
+
+                    <p>Transport system alerts and notifications.</p>
+
+                </div>
+
+
+                <div class="table-card">
+
+                    <table>
+
+                        <tr>
+
+                            <th>Time</th>
+                            <th>Notification</th>
+                            <th>Type</th>
+                            <th>Status</th>
+
+                        </tr>
+
+
+                        <tr>
+
+                            <td>06:02 AM</td>
+
+                            <td>
+                                Driver John Mwangi has
+                                departed the compound.
+                            </td>
+
+                            <td>
+                                Departure
+                            </td>
+
+                            <td>
+                                <span class="status approved">
+                                    Sent
+                                </span>
+                            </td>
+
+                        </tr>
+
+
+                        <tr>
+
+                            <td>07:15 AM</td>
+
+                            <td>
+                                New sickness transport request
+                                submitted.
+                            </td>
+
+                            <td>
+                                Emergency
+                            </td>
+
+                            <td>
+                                <span class="status pending">
+                                    Unread
+                                </span>
+                            </td>
+
+                        </tr>
+
+                    </table>
+
+                </div>
+
+            </section>
+
+        </div>
+
+    </div>
+
+
+    <script>
+
+function showPage(pageId, element) {
+
+    
+    const pages = document.querySelectorAll(".page");
+
+    pages.forEach(function(page) {
+        page.classList.remove("active");
+    });
+
+
+    
+    const selectedPage =
+        document.getElementById(pageId);
+
+    if (selectedPage) {
+        selectedPage.classList.add("active");
+    }
+    const links =
+        document.querySelectorAll(".menu a");
+
+    links.forEach(function(link) {
+        link.classList.remove("active");
+    });
+
+    if (element) {
+        element.classList.add("active");
+    }
+
+}
+
+    </script>
+
+</body>
+</html>
